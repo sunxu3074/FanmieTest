@@ -5,6 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.driver.http.callback.GsonCallback;
+
+import okhttp3.Call;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
         tvBind.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String count = etAccount.getText().toString().trim();
-                String password = etPassword.getText().toString().trim();
-
+                Constants.FanFou.USERNAME = etAccount.getText().toString().trim();
+                Constants.FanFou.PASSWORD = etPassword.getText().toString().trim();
+                getAccessToken();
 
 
             }
@@ -37,5 +42,25 @@ public class MainActivity extends AppCompatActivity {
         etAccount = (EditText) findViewById(R.id.etAccount);
         etPassword = (EditText) findViewById(R.id.etPassword);
         tvBind = (TextView) findViewById(R.id.tvBind);
+    }
+
+    public void getAccessToken(){
+        HttpUtil.getToken(API.getAccessToken("token")).execute(new GsonCallback<String>() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                Toast.makeText(MainActivity.this, "出现错误", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(int ret, int code, String name) {
+                Toast.makeText(MainActivity.this, "出现错误2", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
 }
