@@ -52,7 +52,18 @@ public class HttpUtil {
         return OkHttpUtils.post()
                 .url(protocol.getUrl(Constants.WEB_SERVER_HOST))
                 .addHeader(Constants.HEAD_AUTHORIZATION,
-                        XAuthUtils.getAuthorization())
+                        XAuthUtils.getAuthorization(protocol))
+                .params(protocol.getParams())
+                .build();
+
+    }
+
+
+    public static RequestCall getData(Protocol protocol){
+        return OkHttpUtils.post()
+                .url(protocol.getUrl(Constants.API_SERVER_HOST))
+                .addHeader(Constants.HEAD_AUTHORIZATION,
+                        XAuthUtils.getAuthorization(protocol))
                 .params(protocol.getParams())
                 .build();
 

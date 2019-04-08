@@ -13,6 +13,9 @@ import javax.crypto.spec.SecretKeySpec;
 
 import fanmie.com.fanmie.Constants;
 import fanmie.com.fanmie.OAuthToken;
+import fanmie.com.fanmie.Protocol;
+import okhttp3.HttpUrl;
+import okhttp3.Request;
 
 /**
  * Created by chenlongfei on 2016/11/18.
@@ -31,8 +34,8 @@ public final class XAuthUtils {
 
     }
 
-    public static String getAuthorization() {
-        Map<String, String> oAuthParams = makeOAuthParams();
+    public static String getAuthorization(Protocol protocol) {
+        Map<String, String> oAuthParams = makeOAuthParams(protocol);
         Set<Map.Entry<String, String>> entrySet = oAuthParams.entrySet();
         StringBuilder sb = new StringBuilder();
         sb.append(OAUTH);
@@ -57,10 +60,11 @@ public final class XAuthUtils {
         return nonce;
     }
 
-    public static String getSignature(Map<String, String> oAuthParams) {
+    public static String getSignature(Map<String, String> oAuthParams, Protocol protocol) {
         Map<String, String> queryParams = new HashMap<>();
         Map<String, String> params = new TreeMap<>();
         StringBuilder sb = new StringBuilder();
+        Request request;
 //        HttpUrl httpUrl = request.url();
 //        int querySize = request.url().querySize();
 //        for (int i = 0; i < querySize; i++) {
@@ -76,7 +80,7 @@ public final class XAuthUtils {
         }
         String queryItems = sb.toString().substring(1);
         String baseString = String.format("%s&%s&%s", "POST",
-                OAuthEncoder.encode("http://" + "fanfou.com" + "/oauth/authorize"),
+                OAuthEncoder.encode(protocol.getCurrentUrl()),
                 OAuthEncoder.encode(queryItems));
         String signString = doSign(baseString);
 //        Logger.i("baseString:%s\nsignString:%s", baseString, signString);
@@ -115,7 +119,7 @@ public final class XAuthUtils {
         return Base64.encodeBytes(bytes);
     }
 
-    private static Map<String, String> makeOAuthParams() {
+    private static Map<String, String> makeOAuthParams(Protocol protocol) {
         Map<String, String> oAuthParams = new TreeMap<>();
         String oauthToken = Constants.FanFou.OAUTH_TOKEN;
         String username = Constants.FanFou.USERNAME;
@@ -139,7 +143,7 @@ public final class XAuthUtils {
                 oAuthParams.put(Constants.XAuth.X_AUTH_PASSWORD, password);
             }
         }
-        oAuthParams.put(Constants.XAuth.OAUTH_SIGNATURE, getSignature(oAuthParams));
+        oAuthParams.put(Constants.XAuth.OAUTH_SIGNATURE, getSignature(oAuthParams, protocol));
         return oAuthParams;
     }
 }

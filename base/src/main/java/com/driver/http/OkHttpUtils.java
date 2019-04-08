@@ -207,7 +207,7 @@ public class OkHttpUtils {
                     if (finalCallback instanceof GsonCallback) {
 
                         String responseStr = response.body().string();
-                        if(isJson(responseStr)){
+                        if(false){
                             JSONObject resultJO = new JSONObject(responseStr);
                             UtilsLog.e("x", "response      ==    " + responseStr);
                             int ret = resultJO.optInt("ret");

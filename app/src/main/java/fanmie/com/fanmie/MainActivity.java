@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.driver.http.callback.GsonCallback;
 
+import fanmie.com.fanmie.utils.XAuthUtils;
 import okhttp3.Call;
 
 public class MainActivity extends AppCompatActivity {
@@ -16,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
     private EditText etAccount;
     private EditText etPassword;
     private TextView tvBind;
+    private TextView tvGetData;
+    private TextView tvData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +39,21 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        tvGetData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getData();
+            }
+        });
     }
 
     private void initView() {
         etAccount = (EditText) findViewById(R.id.etAccount);
         etPassword = (EditText) findViewById(R.id.etPassword);
         tvBind = (TextView) findViewById(R.id.tvBind);
+        tvGetData = (TextView) findViewById(R.id.tvGetData);
+        tvData = (TextView) findViewById(R.id.tvData);
     }
 
     public void getAccessToken(){
@@ -60,6 +72,31 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(String response) {
                 Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
 
+                OAuthToken oAuthToken = XAuthUtils.parseToken(response);
+                Constants.FanFou.OAUTH_TOKEN = oAuthToken.getOauthToken();
+                Constants.FanFou.OAUTH_TOKENSECRET = oAuthToken.getOauthTokenSecret();
+            }
+        });
+    }
+
+
+    public void getData(){
+        HttpUtil.getData(API.getData()).execute(new GsonCallback<String>() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                Toast.makeText(MainActivity.this, "出现错误", Toast.LENGTH_LONG).show();
+
+            }
+
+            @Override
+            public void onError(int ret, int code, String name) {
+                Toast.makeText(MainActivity.this, "出现错误2", Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onResponse(String response) {
+//                Toast.makeText(MainActivity.this, response, Toast.LENGTH_LONG).show();
+                tvData.setText(response);
             }
         });
     }

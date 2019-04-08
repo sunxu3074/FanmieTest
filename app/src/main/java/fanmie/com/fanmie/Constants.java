@@ -8,6 +8,8 @@ public class Constants {
 
     public static final String WEB_SERVER_HOST = "http://fanfou.com";
 
+    public static final String API_SERVER_HOST = "http://api.fanfou.com";
+
     public static class FanFou {
 
         public static final String CONSUMER_KEY = "f44caedd9890e6c2dff609314544245a";

@@ -10,8 +10,9 @@ import java.util.Map;
 
 public class Protocol {
 
-    private String url;
+    private String url = "";
 
+    private String mCurrentUrl = "";
     private LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 
     private LinkedHashMap<String, File> files = new LinkedHashMap<String, File>();
@@ -56,7 +57,12 @@ public class Protocol {
 
 //        map.put("carrier", android.os.Build.MANUFACTURER);
 //        map.put("model", android.os.Build.MODEL);
-        return baseUrl + url;
+        mCurrentUrl = baseUrl + url;
+        return mCurrentUrl;
+    }
+
+    public String getCurrentUrl(){
+        return mCurrentUrl;
     }
 
 

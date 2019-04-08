@@ -7,4 +7,8 @@ public class API {
         return Protocol.create("/oauth/access_token");
     }
 
+    public static Protocol getData(){
+        return Protocol.create("/statuses/home_timeline.json");
+    }
+
 }
